@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      - ELSYDEON_URL=http://100.87.170.6:3000
+      - SYNTHFORM_URL=http://100.87.170.6:7175
+      - SYNTHFORM_WS_URL=ws://100.87.170.6:7175/ws/events/
+      - JWT_SECRET=${JWT_SECRET}
+      - FRONTEND_URL=https://avalonstar.tv
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=https://avalonstar.tv/api
+      - VITE_WS_URL=wss://avalonstar.tv/ws
+    depends_on:
+      - backend
+    restart: unless-stopped
