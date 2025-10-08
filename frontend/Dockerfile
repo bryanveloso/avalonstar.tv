@@ -3,6 +3,7 @@ FROM oven/bun:1-slim AS builder
 WORKDIR /app
 
 COPY package.json bun.lock* ./
+COPY backend/package.json ./backend/
 COPY frontend/package.json ./frontend/
 RUN bun install --frozen-lockfile
 
