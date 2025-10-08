@@ -11,7 +11,7 @@ export const Route = createRootRoute({
         <Link to="/quotes" className="[&.active]:font-bold">
           Quotes
         </Link>{' '}
-        <Link to="/characters" className="[&.active]:font-bold">
+        {/* <Link to="/characters" className="[&.active]:font-bold">
           Characters
         </Link>{' '}
         <Link to="/gallery" className="[&.active]:font-bold">
@@ -19,7 +19,7 @@ export const Route = createRootRoute({
         </Link>{' '}
         <Link to="/perks" className="[&.active]:font-bold">
           Perks
-        </Link>
+        </Link> */}
       </div>
       <hr />
       <Outlet />
