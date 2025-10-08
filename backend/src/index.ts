@@ -88,7 +88,7 @@ const app = new Elysia()
       console.log('Client disconnected')
     }
   })
-  .listen(8080)
+  .listen({ port: 8080, hostname: '0.0.0.0' })
 
 console.log(`🚀 Backend running at ${app.server?.hostname}:${app.server?.port}`)
 console.log(`📍 ELSYDEON_URL: ${process.env.ELSYDEON_URL}`)
