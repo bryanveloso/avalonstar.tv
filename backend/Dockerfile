@@ -2,10 +2,13 @@ FROM oven/bun:1-slim
 
 WORKDIR /app
 
-COPY package.json bun.lock ./
+COPY package.json bun.lock* ./
+COPY backend/package.json ./backend/
 RUN bun install --frozen-lockfile
 
-COPY src ./src
+COPY backend/src ./backend/src
+
+WORKDIR /app/backend
 
 EXPOSE 8080
 
