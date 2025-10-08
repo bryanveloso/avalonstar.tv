@@ -1,0 +1,62 @@
+name: Deploy to OrbStack
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  ELSYDEON_URL: http://100.87.170.6:3000
+  SYNTHFORM_URL: http://100.87.170.6:7175
+  SYNTHFORM_WS_URL: ws://100.87.170.6:7175/ws/events/
+  FRONTEND_URL: https://avalonstar.tv
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 10
+
+    - name: Create backend .env file
+      run: |
+        cd backend
+        cat > .env << EOF
+        ELSYDEON_URL=${{ env.ELSYDEON_URL }}
+        SYNTHFORM_URL=${{ env.SYNTHFORM_URL }}
+        SYNTHFORM_WS_URL=${{ env.SYNTHFORM_WS_URL }}
+        JWT_SECRET=${{ secrets.JWT_SECRET }}
+        FRONTEND_URL=${{ env.FRONTEND_URL }}
+        EOF
+
+    - name: Check changes and deploy selectively
+      run: |
+        # Check what changed in this push
+        CHANGED_FILES=$(git diff --name-only ${{ github.event.before }}..HEAD 2>/dev/null || git ls-files)
+
+        # Backend changes
+        if echo "$CHANGED_FILES" | grep -q "backend/"; then
+          echo "Backend code changed, rebuilding backend container"
+          docker compose up --build -d backend
+        fi
+
+        # Frontend changes
+        if echo "$CHANGED_FILES" | grep -q "frontend/"; then
+          echo "Frontend code changed, rebuilding frontend container"
+          docker compose up --build -d frontend
+        fi
+
+        # Infrastructure changes (compose files, Dockerfiles)
+        if echo "$CHANGED_FILES" | grep -q "docker-compose\|Dockerfile"; then
+          echo "Infrastructure changed, rebuilding all containers"
+          docker compose up --build -d --remove-orphans
+        fi
+
+        # Ensure all services are running (non-destructive)
+        docker compose up -d
+
+    - name: Clean up old Docker images
+      run: |
+        docker image prune -f
