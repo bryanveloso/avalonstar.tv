@@ -11,7 +11,15 @@ const app = new Elysia()
     return { error: error.message }
   })
   .use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173'
+    origin: (origin) => {
+      const allowed = [
+        'http://localhost:5173',
+        'http://100.87.170.6:3001',
+        'http://saya:3001',
+        process.env.FRONTEND_URL
+      ].filter(Boolean)
+      return allowed.includes(origin) || true // Allow all for now
+    }
   }))
   .get('/health', () => ({ status: 'ok' }))
   .group('/api', app => app
