@@ -22,7 +22,7 @@ function Quotes() {
       <div className="space-y-2">
         {data?.quotes?.map((quote: any) => (
           <div key={quote.id} className="p-3 bg-gray-100 rounded">
-            "{quote.text}" - {quote.quotee}
+            "{quote.text}" - {quote.quotee.display_name}
           </div>
         ))}
       </div>

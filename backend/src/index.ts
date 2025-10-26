@@ -23,17 +23,17 @@ const app = new Elysia()
   }))
   .get('/health', () => ({ status: 'ok' }))
   .group('/api', app => app
-    // Quotes from Elsydeon
+    // All data from Synthform
     .get('/quotes', async ({ set }) => {
       try {
-        const url = `${process.env.ELSYDEON_URL}/api/quotes`
+        const url = `${process.env.SYNTHFORM_URL}/api/quotes`
         console.log(`Fetching quotes from: ${url}`)
         const res = await fetch(url)
 
         if (!res.ok) {
-          console.error(`Elsydeon error: ${res.status} ${res.statusText}`)
+          console.error(`Synthform error: ${res.status} ${res.statusText}`)
           set.status = 502
-          return { error: `Elsydeon API returned ${res.status}` }
+          return { error: `Synthform API returned ${res.status}` }
         }
 
         const data = await res.json()
@@ -41,10 +41,9 @@ const app = new Elysia()
       } catch (error) {
         console.error('Failed to fetch quotes:', error)
         set.status = 502
-        return { error: 'Failed to connect to Elsydeon', details: String(error) }
+        return { error: 'Failed to connect to Synthform', details: String(error) }
       }
     })
-    // Everything else from Synthform
     .get('/characters', async () => {
       const res = await fetch(`${process.env.SYNTHFORM_URL}/api/characters`)
       return res.json()
@@ -99,5 +98,4 @@ const app = new Elysia()
   .listen({ port: 8080, hostname: '0.0.0.0' })
 
 console.log(`🚀 Backend running at ${app.server?.hostname}:${app.server?.port}`)
-console.log(`📍 ELSYDEON_URL: ${process.env.ELSYDEON_URL}`)
 console.log(`📍 SYNTHFORM_URL: ${process.env.SYNTHFORM_URL}`)
