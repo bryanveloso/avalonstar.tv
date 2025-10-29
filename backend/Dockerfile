@@ -11,6 +11,6 @@ COPY backend/src ./backend/src
 
 WORKDIR /app/backend
 
-EXPOSE 8080
+EXPOSE 8088
 
 CMD ["bun", "src/index.ts"]

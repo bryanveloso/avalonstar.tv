@@ -9,7 +9,9 @@ function Quotes() {
   const { data, isLoading } = useQuery({
     queryKey: ['quotes'],
     queryFn: async () => {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/api/quotes`)
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL || 'http://localhost:8088'}/api/quotes`
+      );
       return res.json()
     }
   })
