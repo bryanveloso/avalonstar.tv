@@ -3,6 +3,23 @@ import { cors } from '@elysiajs/cors'
 import { jwt } from '@elysiajs/jwt'
 import { oauth2 } from 'elysia-oauth2';
 
+// Build OAuth providers config, only including configured providers
+const oauthProviders: Record<string, [string, string, string]> = {};
+if (process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET) {
+  oauthProviders.Discord = [
+    process.env.DISCORD_CLIENT_ID,
+    process.env.DISCORD_CLIENT_SECRET,
+    process.env.DISCORD_REDIRECT_URI || 'http://localhost:8088/auth/discord/callback'
+  ];
+}
+if (process.env.TWITCH_CLIENT_ID && process.env.TWITCH_CLIENT_SECRET) {
+  oauthProviders.Twitch = [
+    process.env.TWITCH_CLIENT_ID,
+    process.env.TWITCH_CLIENT_SECRET,
+    process.env.TWITCH_REDIRECT_URI || 'http://localhost:8088/auth/twitch/callback'
+  ];
+}
+
 const app = new Elysia()
   .onRequest(() => {
     console.log('Request received!');
@@ -33,26 +50,7 @@ const app = new Elysia()
   )
   .use(
     oauth2(
-      {
-        Discord:
-          process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET
-            ? [
-                process.env.DISCORD_CLIENT_ID,
-                process.env.DISCORD_CLIENT_SECRET,
-                process.env.DISCORD_REDIRECT_URI ||
-                  'http://localhost:8088/auth/discord/callback',
-              ]
-            : undefined,
-        Twitch:
-          process.env.TWITCH_CLIENT_ID && process.env.TWITCH_CLIENT_SECRET
-            ? [
-                process.env.TWITCH_CLIENT_ID,
-                process.env.TWITCH_CLIENT_SECRET,
-                process.env.TWITCH_REDIRECT_URI ||
-                  'http://localhost:8088/auth/twitch/callback',
-              ]
-            : undefined,
-      },
+      oauthProviders,
       {
         cookie: {
           secure: false, // Allow cookies over HTTP in development
