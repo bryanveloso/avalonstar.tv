@@ -9,6 +9,13 @@ RUN bun install --frozen-lockfile
 
 COPY frontend ./frontend
 WORKDIR /app/frontend
+
+# Accept build args for Vite env vars
+ARG VITE_API_URL
+ARG VITE_WS_URL
+ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_WS_URL=$VITE_WS_URL
+
 RUN bun run build
 
 # Runner stage
