@@ -21,7 +21,7 @@ services:
       dockerfile: frontend/Dockerfile
       args:
         - VITE_API_URL=https://avalonstar.tv/api
-        - VITE_WS_URL=wss://ws.avalonstar.tv
+        - VITE_WS_URL=wss://avalonstar.tv/ws
     ports:
       - "3001:3000"
     depends_on:

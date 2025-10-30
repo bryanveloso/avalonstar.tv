@@ -1,7 +1,7 @@
 import { Elysia } from 'elysia'
 import { cors } from '@elysiajs/cors'
 import { jwt } from '@elysiajs/jwt'
-import { oauth2 } from 'elysia-oauth2';
+import { oauth2 } from 'elysia-oauth2'
 
 // Build OAuth providers config, only including configured providers
 const oauthProviders: Record<string, [string, string, string]> = {};
@@ -231,31 +231,52 @@ const app = new Elysia()
         };
       })
   )
+  // Log all requests
+  .onRequest(({ request }) => {
+    console.log(`📥 ${request.method} ${request.url}`);
+  })
   // WebSocket relay for Synthform events (using Bun's native WebSocket)
   .ws('/ws', {
-    async open(ws) {
-      // Connect to Synthform WebSocket when client connects
-      // Bun has native WebSocket support
-      const synthformWs = new WebSocket(
-        process.env.SYNTHFORM_WS_URL || 'ws://localhost:8001'
-      );
+    open(ws) {
+      console.log('🔌 Client connected to WebSocket relay');
 
-      synthformWs.addEventListener('message', (event) => {
-        // Forward Synthform events to client
-        ws.send(event.data);
-      });
+      // Connect to Synthform asynchronously (don't block client connection)
+      setTimeout(() => {
+        try {
+          const synthformWs = new WebSocket(
+            process.env.SYNTHFORM_WS_URL || 'ws://localhost:8001'
+          );
 
-      synthformWs.addEventListener('error', (error) => {
-        console.error('Synthform WebSocket error:', error);
-      });
+          synthformWs.onopen = () => {
+            console.log('✅ Connected to Synthform WebSocket');
+          };
 
-      // Store connection for cleanup
-      ws.data.synthformWs = synthformWs;
-      console.log('Client connected to relay');
+          synthformWs.onmessage = (event) => {
+            // Forward Synthform events to client
+            try {
+              ws.send(event.data);
+            } catch (e) {
+              console.error('Failed to forward message to client:', e);
+            }
+          };
+
+          synthformWs.onerror = (error) => {
+            console.error('❌ Synthform WebSocket error:', error);
+          };
+
+          synthformWs.onclose = () => {
+            console.log('Synthform WebSocket closed');
+          };
+
+          // Store connection for cleanup
+          ws.data.synthformWs = synthformWs;
+        } catch (error) {
+          console.error('Failed to connect to Synthform:', error);
+        }
+      }, 0);
     },
     message(ws, message) {
-      // Handle any client->server messages if needed
-      console.log('Received from client:', message);
+      console.log('📨 Received from client:', message);
     },
     close(ws) {
       // Clean up Synthform connection

@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Read(//Users/Avalonstar/Code/bryanveloso/**)"
+      "Read(//Users/Avalonstar/Code/bryanveloso/**)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs"
     ],
     "deny": [],
     "ask": []

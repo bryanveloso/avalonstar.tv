@@ -1,0 +1,6 @@
+name = "avalonstar-websocket-relay"
+main = "index.js"
+compatibility_date = "2025-01-15"
+
+[env.production]
+route = { pattern = "avalonstar.tv/ws", zone_name = "avalonstar.tv" }

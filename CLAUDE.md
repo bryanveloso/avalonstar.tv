@@ -104,3 +104,15 @@ bun --hot ./index.ts
 ```
 
 For more information, read the Bun API docs in `node_modules/bun-types/docs/**.md`.
+
+## Deployment
+
+**CRITICAL: This project uses AUTOMATED deployment via GitHub Actions.**
+
+- A self-hosted GitHub Actions runner on "Saya" (Mac Mini with OrbStack) automatically deploys on push to `main`
+- The runner builds images on GitHub-hosted runners, pushes to GHCR, then pulls and runs via `docker-compose` on Saya
+- **NEVER** tell the user to manually run `docker-compose` commands on Saya
+- **NEVER** suggest manual deployment steps
+- The `docker-compose.yml` file is the source of truth, but it's executed by the CI/CD pipeline, not by humans
+
+See `DEPLOYMENT.md` for full architecture details.
