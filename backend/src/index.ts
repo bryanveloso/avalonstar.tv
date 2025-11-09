@@ -144,10 +144,15 @@ const app = new Elysia()
       }
     }
   )
-  .get('/auth/twitch', ({ oauth2, request }) => {
+  .all('/auth/twitch', ({ oauth2, request }) => {
     // HEAD requests should return 200 without processing OAuth redirect
     if (request.method === 'HEAD') {
       return new Response(null, { status: 200 });
+    }
+
+    // Only handle GET requests for OAuth
+    if (request.method !== 'GET') {
+      return new Response('Method not allowed', { status: 405 });
     }
 
     if (!process.env.TWITCH_CLIENT_ID) {
