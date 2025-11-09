@@ -13,6 +13,12 @@ services:
       - SYNTHFORM_WS_URL=ws://100.87.170.6:7175/ws/events/
       - JWT_SECRET=${JWT_SECRET}
       - FRONTEND_URL=https://avalonstar.tv
+      - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+      - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
+      - DISCORD_REDIRECT_URI=https://avalonstar.tv/auth/discord/callback
+      - TWITCH_CLIENT_ID=${TWITCH_CLIENT_ID}
+      - TWITCH_CLIENT_SECRET=${TWITCH_CLIENT_SECRET}
+      - TWITCH_REDIRECT_URI=https://avalonstar.tv/auth/twitch/callback
     restart: unless-stopped
 
   frontend:
