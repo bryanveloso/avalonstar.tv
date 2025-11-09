@@ -20,18 +20,13 @@ jobs:
       with:
         fetch-depth: 10
 
-    - name: Create backend .env file
-      run: |
-        cd backend
-        cat > .env << EOF
-        ELSYDEON_URL=${{ env.ELSYDEON_URL }}
-        SYNTHFORM_URL=${{ env.SYNTHFORM_URL }}
-        SYNTHFORM_WS_URL=${{ env.SYNTHFORM_WS_URL }}
-        JWT_SECRET=${{ secrets.JWT_SECRET }}
-        FRONTEND_URL=${{ env.FRONTEND_URL }}
-        EOF
-
     - name: Check changes and deploy selectively
+      env:
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+        DISCORD_CLIENT_SECRET: ${{ secrets.DISCORD_CLIENT_SECRET }}
+        TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+        TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
       run: |
         # Check what changed in this push
         CHANGED_FILES=$(git diff --name-only ${{ github.event.before }}..HEAD 2>/dev/null || git ls-files)
