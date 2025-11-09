@@ -144,7 +144,12 @@ const app = new Elysia()
       }
     }
   )
-  .get('/auth/twitch', ({ oauth2 }) => {
+  .get('/auth/twitch', ({ oauth2, request }) => {
+    // HEAD requests should return 200 without processing OAuth redirect
+    if (request.method === 'HEAD') {
+      return new Response(null, { status: 200 });
+    }
+
     if (!process.env.TWITCH_CLIENT_ID) {
       return { error: 'Twitch OAuth not configured' };
     }
