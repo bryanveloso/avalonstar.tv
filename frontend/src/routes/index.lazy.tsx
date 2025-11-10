@@ -71,15 +71,11 @@ function Dashboard() {
   }, [])
 
   const handleLogin = (provider: 'discord' | 'twitch') => {
-    window.location.href = `${
-      import.meta.env.VITE_API_URL || 'http://localhost:8088'
-    }/auth/${provider}`;
+    window.location.href = `/auth/${provider}`;
   };
 
   const handleLogout = () => {
-    window.location.href = `${
-      import.meta.env.VITE_API_URL || 'http://localhost:8088'
-    }/auth/logout`;
+    window.location.href = `/auth/logout`;
   };
 
   return (
