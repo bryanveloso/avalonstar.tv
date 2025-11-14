@@ -1,5 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
+import { css } from 'styled-system/css'
 
 export const Route = createLazyFileRoute('/')({
   component: Dashboard,
@@ -81,7 +82,7 @@ function Dashboard() {
   return (
     <div className="p-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Crusader Hub</h1>
+        <h1 className={css({ fontSize: '2xl', fontWeight: 'bold', color: 'blue.500' })}>Crusader Hub</h1>
         <div className="flex items-center gap-4">
           {loading ? (
             <div className="text-gray-400">Loading...</div>

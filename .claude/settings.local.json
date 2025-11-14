@@ -3,7 +3,8 @@
     "allow": [
       "Read(//Users/Avalonstar/Code/bryanveloso/**)",
       "mcp__context7__resolve-library-id",
-      "mcp__context7__get-library-docs"
+      "mcp__context7__get-library-docs",
+      "Bash(flyctl ssh console:*)"
     ],
     "deny": [],
     "ask": []
